@@ -8,10 +8,25 @@
  * address is set to in; Otherwise, the value does not change.
  * The value of the selected register is emitted by out.
  */
+
+// Define a CHIP named RAM16K
 CHIP RAM16K {
+    // Input declarations: 16-bit data input 'in', load signal, and 14-bit address bus 'address'
     IN in[16], load, address[14];
+    // Output declaration: 16-bit data output 'out'
     OUT out[16];
 
     PARTS:
-    //// Replace this comment with your code.
+    // 4-way demultiplexer to distribute the load signal
+    DMux4Way(in=load, sel=address[12..13], a=lab, b=lcd, c=lef, d=lgh);
+
+    // Four 4K RAM components with specific load signals and address ranges
+    RAM4K(in=in, load=lab, address=address[0..11], out=oab);
+    RAM4K(in=in, load=lcd, address=address[0..11], out=ocd);
+    RAM4K(in=in, load=lef, address=address[0..11], out=oef);
+    RAM4K(in=in, load=lgh, address=address[0..11], out=ogh);
+
+    // 4-way multiplexer to select the appropriate output based on address[12..13]
+    Mux4Way16(a=oab, b=ocd, c=oef, d=ogh, sel=address[12..13], out=out);
+    
 }
