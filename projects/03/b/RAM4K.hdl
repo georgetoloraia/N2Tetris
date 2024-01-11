@@ -13,7 +13,9 @@ CHIP RAM4K {
     OUT out[16];
 
     PARTS:
-    
+
+    // Demultiplex the load signal to 8 separate signals
+
     DMux8Way(in=load, sel=address[9..11], a=la, b=lb, c=lc, d=ld, e=le, f=lf, g=lg, h=lh);
     
     // Each RAM512 block gets its own load and address signals
